@@ -157,17 +157,17 @@ let options_3: any = ref({
 		"#6f6",
 		"#0f0",
 		"#090",
-		"#020"
+		"#040"
 	],
 	calendar: {
-		left: "auto",
-		right: "auto",
+		left: "80",
+		right: "80",
 		range: '2023',
-		cellSize: [20, 25],//[kuan gao]
+		cellSize: [20, 23],//[kuan gao]
 		itemStyle: {
 			color: "#ffffff00",
 			borderColor: "#88888888",
-			borderRadius: 10
+			borderWidth: 0.2
 		},
 		dayLabel: {
 			nameMap: "ZH",
@@ -178,7 +178,6 @@ let options_3: any = ref({
 		},
 		yearLabel: {
 			align: "center",
-			color: "#000"
 		}
 	},
 	tooltip: {
