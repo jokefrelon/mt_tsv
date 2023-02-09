@@ -10,15 +10,10 @@
 
 import { ref } from "vue";
 import myecharts from "../components/echarts/index.vue";
-import nstore from "../store/index";
-import { isDark } from "~/composables";
 import * as echarts from 'echarts';
-import { auto } from "@popperjs/core";
 
-const n_store = nstore()
 
 let options_1: any = ref({
-
 	tooltip: {
 		trigger: 'axis',
 		axisPointer: {
@@ -138,7 +133,6 @@ let options_2: any = ref({
 })
 
 let options_3: any = ref({
-
 	toolbox: {
 		feature: {
 			saveAsImage: {
