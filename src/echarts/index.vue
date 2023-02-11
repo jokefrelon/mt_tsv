@@ -4,7 +4,7 @@
 </template>
 <script setup lang="ts">
 import * as echarts from 'echarts'
-import {shallowRef, watch } from "vue";
+import {onMounted, shallowRef, watch } from "vue";
 // 使用shallowRef参考 Github:[pissang](https://github.com/apache/echarts/issues/13943#issuecomment-755301987)
 let echarts_virtual_DOM:any = shallowRef(null)
 let newEcharts:any = shallowRef(null)

@@ -9,7 +9,7 @@
 <script setup lang="ts">
 
 import { ref } from "vue";
-import myecharts from "../components/echarts/index.vue";
+import myecharts from "../echarts/index.vue";
 import * as echarts from 'echarts';
 
 
@@ -165,6 +165,7 @@ let options_3: any = ref({
 		},
 		dayLabel: {
 			nameMap: "ZH",
+			color: "#888"
 		},
 		monthLabel: {
 			nameMap: "ZH",
@@ -172,6 +173,7 @@ let options_3: any = ref({
 		},
 		yearLabel: {
 			align: "center",
+			color: "#888"
 		}
 	},
 	tooltip: {
