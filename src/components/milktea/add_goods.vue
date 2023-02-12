@@ -15,7 +15,17 @@
 			</el-form-item>
 
 			<el-form-item label="标签:" prop="tips">
-				<el-input v-model="form.tips" clearable placeholder="请输入奶茶标签" :prefix-icon="PriceTag" />
+
+				<el-tag v-for="tag in form.tips" :key="tag" closable round hit @close="delTag(tag)">
+					{{ tag }}
+				</el-tag>
+				<el-input v-if="tagInputVisible" ref="tagInputRef" v-model="tagValue" class="ml-1 w-20" round
+					@keyup.enter="copyTagValue2form_tips" @blur="copyTagValue2form_tips" />
+				<el-button v-else @click="showInput" round>
+					+新标签
+				</el-button>
+
+				<!-- <el-input v-model="form.tips" clearable placeholder="请输入奶茶标签" :prefix-icon="PriceTag" /> -->
 			</el-form-item>
 
 			<el-form-item label="系列:" prop="series">
@@ -29,7 +39,8 @@
 				<el-input v-model="form.picurl" disabled />
 			</el-form-item>
 
-			<el-upload drag action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15">
+			<el-upload drag ref="picUploadRef" :action="uploadPictureUrl" method="post" list-type="picture" :limit="1"
+				:auto-upload=true :on-exceed="replacePicture" :on-success="copyUrl2picurl" :on-error="notifyUploadPicError">
 				<el-icon><upload-filled /></el-icon>
 				<p>
 					拖拽图片至此上传
@@ -50,21 +61,33 @@
 
 <script setup lang="ts">
 import { Sell, Refresh, Money, PriceTag, Document, Comment, Flag } from '@element-plus/icons-vue'
-import { reactive } from 'vue';
-import type { FormInstance, FormRules } from 'element-plus'
+import { reactive, ref, nextTick } from 'vue';
+import { genFileId, ElMessage, ElInput } from 'element-plus'
+import type { FormInstance, FormRules, UploadProps, UploadRawFile, UploadInstance } from 'element-plus'
 import axmtpost from "../../axios/milktea/addmilktea";
+import { getbaseurl } from "../../axios/baseurl"
+
+const uploadPictureUrl: any = ref(getbaseurl() + "uploadpic")
 
 const formRef = ref<FormInstance>()
+const picUploadRef = ref<UploadInstance>()
+const tagInputRef = ref<InstanceType<typeof ElInput>>()
 
+const tagValue = ref('')
+const tagInputVisible = ref(false)
+
+
+// 表单变量
 let form: any = reactive({
 	name: "",
 	price: null,
 	intro: "",
 	picurl: "",
-	tips: "",
+	tips: [],
 	series: "",
 })
 
+// 表单校验规则
 const formRules = reactive<FormRules>({
 	name: [
 		{ required: true, message: "名称是必须的", trigger: "blur" }
@@ -92,11 +115,59 @@ let test = reactive(
 		{ value: "2", label: "test2" }
 	]
 )
+
+// 显示输入框
+const showInput = () => {
+	tagInputVisible.value = true
+	nextTick(() => {
+		tagInputRef.value!.input!.focus()
+	})
+}
+
+// 保存tagValue的值到form.tips里面
+const copyTagValue2form_tips = () => {
+	if (tagValue.value) {
+		form.tips.push(tagValue.value)
+	}
+	tagInputVisible.value = false
+	tagValue.value = ''
+}
+
+// 删除tag
+const delTag = (tag: string) => {
+	form.tips.splice(form.tips.indexOf(tag), 1)
+}
+
+// 替换选择的图片
+const replacePicture: UploadProps['onExceed'] = (files) => {
+	picUploadRef.value!.clearFiles()
+	const file = files[0] as UploadRawFile
+	file.uid = genFileId()
+	picUploadRef.value!.handleStart(file)
+}
+
+// 上传图片成功后对picurl赋值
+const copyUrl2picurl: UploadProps['onSuccess'] = (result) => {
+	if (result.result == "200 ok") {
+		form.picurl = result.url
+		ElMessage({
+			message: '上传图片成功',
+			type: 'success',
+		})
+	}
+}
+
+// 上传图片失败通知
+const notifyUploadPicError: UploadProps['onError'] = (e) => {
+	ElMessage.error("抱歉!图片上传失败")
+}
+
+// 重置表格
 const resetForm = (formEl: FormInstance | undefined) => {
-  if (!formEl) return
-  formEl.resetFields()
-	console.log(form);
-	
+
+	picUploadRef.value?.clearFiles()
+	if (!formEl) return
+	formEl.resetFields()
 }
 
 </script>
