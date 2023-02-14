@@ -34,15 +34,15 @@ import { toggleDark } from '~/composables';
 				</el-menu-item>
 			</router-link>
 
+			<RouterLink to="/modify">
+				<el-menu-item index="2-3">产品调整</el-menu-item>
+			</RouterLink>
 
-			<el-menu-item index="2-3">产品调整</el-menu-item>
-
-			<el-sub-menu index="2-4">
-				<template #title>分类设置</template>
-				<el-menu-item index="2-4-1">啦啦啦</el-menu-item>
-				<el-menu-item index="2-4-2">略略略</el-menu-item>
-				<el-menu-item index="2-4-3">哈哈哈</el-menu-item>
-			</el-sub-menu>
+			<RouterLink to="/series">
+				<el-menu-item index="2-4">
+					分类设置
+				</el-menu-item>
+			</RouterLink>
 
 			<el-menu-item index="2-5">标签设置</el-menu-item>
 
@@ -54,7 +54,7 @@ import { toggleDark } from '~/composables';
 			</el-icon>
 			订单
 		</el-menu-item>
-		
+
 		<el-sub-menu index="4">
 			<template #title>
 				<el-icon>
@@ -69,9 +69,9 @@ import { toggleDark } from '~/composables';
 
 			<el-menu-item index="4-3">其他</el-menu-item>
 		</el-sub-menu>
-		
+
 		<el-sub-menu index="5">
-			
+
 			<template #title>
 				<el-icon>
 					<Avatar />
@@ -92,18 +92,18 @@ import { toggleDark } from '~/composables';
 		</el-sub-menu>
 
 		<el-sub-menu index="6">
-		
+
 			<template #title>
 				<el-icon>
 					<Box />
 				</el-icon>
 				其他
 			</template>
-		
+
 			<el-menu-item index="6-1">优惠码</el-menu-item>
 
 			<el-menu-item index="6-2">排班表</el-menu-item>
-			
+
 		</el-sub-menu>
 
 		<el-menu-item h="full" @click="toggleDark()" index="7">

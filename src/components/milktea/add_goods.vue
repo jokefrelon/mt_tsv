@@ -19,7 +19,7 @@
 				<el-tag v-for="tag in form.tips" :key="tag" closable round hit @close="delTag(tag)">
 					{{ tag }}
 				</el-tag>
-				<el-input v-if="tagInputVisible" ref="tagInputRef" v-model="tagValue" class="ml-1 w-20" round
+				<el-input v-if="tagInputVisible" ref="tagInputRef" v-model="tagValue" class="ml-1 w-20"
 					@keyup.enter="copyTagValue2form_tips" @blur="copyTagValue2form_tips" />
 				<el-button v-else @click="showInput" round>
 					+新标签
@@ -52,7 +52,7 @@
 			</el-upload>
 		</el-form>
 		<el-row justify="space-evenly">
-			<el-button size="large" plain type="info" :icon="Sell">提交</el-button>
+			<el-button @click="submitForm(formRef)" size="large" plain type="info" :icon="Sell">提交</el-button>
 			<el-button @click="resetForm(formRef)" size="large" plain type="danger" :icon="Refresh">清除</el-button>
 		</el-row>
 
@@ -60,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import { Sell, Refresh, Money, PriceTag, Document, Comment, Flag } from '@element-plus/icons-vue'
+import { Sell, Refresh, Money, Document, Comment, Flag } from '@element-plus/icons-vue'
 import { reactive, ref, nextTick } from 'vue';
 import { genFileId, ElMessage, ElInput } from 'element-plus'
 import type { FormInstance, FormRules, UploadProps, UploadRawFile, UploadInstance } from 'element-plus'
@@ -164,10 +164,30 @@ const notifyUploadPicError: UploadProps['onError'] = (e) => {
 
 // 重置表格
 const resetForm = (formEl: FormInstance | undefined) => {
-
 	picUploadRef.value?.clearFiles()
 	if (!formEl) return
 	formEl.resetFields()
+}
+
+// 提交
+const submitForm = (formEl: FormInstance | undefined) => {
+	if (!formEl) return
+	formEl.validate((valid) => {
+		if (valid) {
+			axmtpost(form).then((result) => {
+				if (result == 1) {
+					resetForm(formRef.value)
+					ElMessage({
+						message: '提交成功!',
+						type: 'success',
+					})
+				}
+			})
+		} else {
+			ElMessage.error("提交失败!")
+			return false
+		}
+	})
 }
 
 </script>
