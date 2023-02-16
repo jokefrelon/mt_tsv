@@ -31,6 +31,7 @@ declare module '@vue/runtime-core' {
     Modify_milktea: typeof import('./components/milktea/modify_milktea.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Sample_modify: typeof import('./components/milktea/sample_modify.vue')['default']
     Welcome: typeof import('./components/welcome.vue')['default']
   }
 }
