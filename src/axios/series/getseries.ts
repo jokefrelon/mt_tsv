@@ -1,14 +1,15 @@
 import axios from 'axios';
 import { getbaseurl } from "../baseurl";
 
-export default function axmtpost(data:any) {
+function getallseries() {
 	const ax = axios({
-		url: getbaseurl()+"addmilktea",
-		method:"post",
-		data: data,
+		url: getbaseurl() + "getallseries",
+		method: "get",
 		timeout:5000
 	}).then(res => {
 		return res.data
 	})
 	return ax
 }
+
+export { getallseries }

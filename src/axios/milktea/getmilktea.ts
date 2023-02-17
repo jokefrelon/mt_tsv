@@ -4,7 +4,8 @@ import { getbaseurl } from "../baseurl";
 function getMilkteaList() {
 	const ax = axios({
 		url: getbaseurl() + "getmilktealist",
-		method: "get"
+		method: "get",
+		timeout:5000
 	}).then(res => {
 		return res.data
 	})
@@ -13,8 +14,9 @@ function getMilkteaList() {
 
 function getMilkteaByGuid(guid: any) {
 	const ax = axios({
-		url: getbaseurl()+"getmilkteabyid",
+		url: getbaseurl() + "getmilkteabyid",
 		method: "get",
+		timeout:5000,
 		params: {
 			guid: guid,
 		}
@@ -24,4 +26,4 @@ function getMilkteaByGuid(guid: any) {
 	return ax
 }
 
-export { getMilkteaList,getMilkteaByGuid }
+export { getMilkteaList, getMilkteaByGuid }

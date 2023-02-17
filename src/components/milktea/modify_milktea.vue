@@ -37,7 +37,12 @@ console.log(route.params.guid);
 
 
 onBeforeMount(() => {
-	getMilkteaList().then((result) => {
+	getMilkteaList().then((e) => {
+		let result:any = null;
+		if (e.errorStatus == false) {
+			result = e.dataList;
+		}		
+		
 		let tmp: { name: string; price: number; nowPrice: string; discount: number; soldout: string; picurl: string; }[] = []
 		result.forEach((element: {
 			guid: any,

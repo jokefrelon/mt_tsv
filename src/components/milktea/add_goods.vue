@@ -174,8 +174,8 @@ const submitForm = (formEl: FormInstance | undefined) => {
 	if (!formEl) return
 	formEl.validate((valid) => {
 		if (valid) {
-			axmtpost(form).then((result) => {
-				if (result == 1) {
+			axmtpost(form).then(result => {
+				if (result.errorStatus == false) {
 					resetForm(formRef.value)
 					ElMessage({
 						message: '提交成功!',

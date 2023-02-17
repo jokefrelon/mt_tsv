@@ -31,7 +31,7 @@
 			<el-form-item label="系列:" prop="series">
 				<el-select style="width: 100%;" v-model="form.series" clearable placeholder="请选择奶茶所属系列" :suffix-icon="Flag"
 					:fit-input-width=true>
-					<el-option v-for="item in test" :key="item.value" :label="item.label" :value="item.value" />
+					<el-option v-for="item in seriesData" :key="item.value" :label="item.label" :value="item.value" />
 				</el-select>
 			</el-form-item>
 
@@ -40,7 +40,8 @@
 			</el-form-item>
 
 			<el-upload drag ref="picUploadRef" :action="uploadPictureUrl" method="post" list-type="picture" :limit="1"
-				:auto-upload=true :on-exceed="replacePicture" :on-success="copyUrl2picurl" :on-error="notifyUploadPicError">
+				:auto-upload=true :on-exceed="replacePicture" :on-success="copyUrl2picurl" :on-error="notifyUploadPicError"
+				:file-list=defaultPicture>
 				<el-icon><upload-filled /></el-icon>
 				<p>
 					拖拽图片至此上传
@@ -67,6 +68,7 @@ import type { FormInstance, FormRules, UploadProps, UploadRawFile, UploadInstanc
 import axmtpost from "../../axios/milktea/addmilktea";
 import { getbaseurl } from "../../axios/baseurl"
 import { getMilkteaByGuid } from "../../axios/milktea/getmilktea"
+import { getallseries } from "../../axios/series/getseries"
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
@@ -79,11 +81,33 @@ const tagInputRef = ref<InstanceType<typeof ElInput>>()
 
 const tagValue = ref('')
 const tagInputVisible = ref(false)
+const seriesData = ref()
+const defaultPicture: any = ref()
 
 onBeforeMount(() => {
-	getMilkteaByGuid(route.params.guid).then((result) => { 
-		console.log(result);
 
+	getMilkteaByGuid(route.params.guid).then(result => {
+		if (result.errorStatus == false) {
+			form.name = result.dataList[0].name
+			form.price = result.dataList[0].price
+			form.intro = result.dataList[0].intro
+			form.picurl = result.dataList[0].picurl
+			form.tips = JSON.parse(result.dataList[0].tips)
+			form.series = parseInt(result.dataList[0].series)
+			defaultPicture.value = [{ "name": form.picurl.split("/")[4], "url": form.picurl }]
+		}
+	}).catch(error => {
+		console.log(error);
+		ElMessage.error("网络错误!")
+	})
+
+	getallseries().then(result => {
+		if (result.errorStatus == false) {
+			seriesData.value = result.dataList
+		}
+	}).catch(error => {
+		console.log(error);
+		ElMessage.error("网络错误!")
 	})
 })
 
@@ -118,13 +142,6 @@ const formRules = reactive<FormRules>({
 		{ required: true, message: "系列是必须的", trigger: "blur" }
 	]
 })
-
-let test = reactive(
-	[
-		{ value: "1", label: "test1" },
-		{ value: "2", label: "test2" }
-	]
-)
 
 // 显示输入框
 const showInput = () => {
@@ -184,15 +201,17 @@ const submitForm = (formEl: FormInstance | undefined) => {
 	if (!formEl) return
 	formEl.validate((valid) => {
 		if (valid) {
-			axmtpost(form).then((result) => {
-				if (result == 1) {
-					resetForm(formRef.value)
-					ElMessage({
-						message: '提交成功!',
-						type: 'success',
-					})
-				}
-			})
+			// axmtpost(form).then((result) => {
+			// 	if (result == 1) {
+			// 		resetForm(formRef.value)
+			// 		ElMessage({
+			// 			message: '提交成功!',
+			// 			type: 'success',
+			// 		})
+			// 	}
+			// })
+			console.log(form.series);
+
 		} else {
 			ElMessage.error("提交失败!")
 			return false
