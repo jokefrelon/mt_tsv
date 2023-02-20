@@ -31,7 +31,7 @@
 			<el-form-item label="系列:" prop="series">
 				<el-select style="width: 100%;" v-model="form.series" clearable placeholder="请选择奶茶所属系列" :suffix-icon="Flag"
 					:fit-input-width=true>
-					<el-option v-for="item in test" :key="item.value" :label="item.label" :value="item.value" />
+					<el-option v-for="item in seriesData" :key="item.value" :label="item.label" :value="item.value" />
 				</el-select>
 			</el-form-item>
 
@@ -64,11 +64,12 @@ import { Sell, Refresh, Money, Document, Comment, Flag } from '@element-plus/ico
 import { reactive, ref, nextTick } from 'vue';
 import { genFileId, ElMessage, ElInput } from 'element-plus'
 import type { FormInstance, FormRules, UploadProps, UploadRawFile, UploadInstance } from 'element-plus'
-import axmtpost from "../../axios/milktea/addmilktea";
-import { getbaseurl } from "../../axios/baseurl"
+import axmtpost from "~/axios/milktea/addmilktea";
+import { getallseries } from "~/axios/series/getseries"
+import { getbaseurl } from "~/axios/baseurl"
 
 const uploadPictureUrl: any = ref(getbaseurl() + "uploadpic")
-
+const seriesData: any = ref()
 const formRef = ref<FormInstance>()
 const picUploadRef = ref<UploadInstance>()
 const tagInputRef = ref<InstanceType<typeof ElInput>>()
@@ -76,15 +77,35 @@ const tagInputRef = ref<InstanceType<typeof ElInput>>()
 const tagValue = ref('')
 const tagInputVisible = ref(false)
 
+onBeforeMount(() => {
+	getallseries().then(result => {
+		if (result.errorStatus == false) {
+			seriesData.value = result.dataList
+		}
+	}).catch(error => {
+		console.log(error);
+		ElMessage.error("网络错误!")
+	})
+})
+
+// 定义类型
+type formT = {
+	name: string;
+	price: number | undefined;
+	intro: string;
+	picurl: string;
+	tips: string[];
+	series: number | undefined;
+}
 
 // 表单变量
-let form: any = reactive({
+let form: formT = reactive({
 	name: "",
-	price: null,
+	price: undefined,
 	intro: "",
 	picurl: "",
 	tips: [],
-	series: "",
+	series: undefined,
 })
 
 // 表单校验规则
@@ -108,13 +129,6 @@ const formRules = reactive<FormRules>({
 		{ required: true, message: "系列是必须的", trigger: "blur" }
 	]
 })
-
-let test = reactive(
-	[
-		{ value: "1", label: "test1" },
-		{ value: "2", label: "test2" }
-	]
-)
 
 // 显示输入框
 const showInput = () => {
