@@ -4,14 +4,21 @@ import { toggleDark } from '~/composables';
 </script>
 
 <template>
-	<el-menu class="el-menu-demo" mode="horizontal" :ellipsis="false">
+	<el-menu
+		class="el-menu-demo"
+		mode="horizontal"
+		:ellipsis="false"
+	>
 
-		<el-menu-item index="1">
-			<el-icon>
-				<IceDrink />
-			</el-icon>
-			Ikun奶茶
-		</el-menu-item>
+		<RouterLink to="/buy">
+			<el-menu-item index="1">
+				<el-icon>
+					<IceDrink />
+				</el-icon>
+				Ikun奶茶
+			</el-menu-item>
+		</RouterLink>
+
 		<el-sub-menu index="2">
 
 			<template #title>
@@ -104,9 +111,19 @@ import { toggleDark } from '~/composables';
 
 		</el-sub-menu>
 
-		<el-menu-item h="full" @click="toggleDark()" index="7">
-			<button class="border-none w-full bg-transparent cursor-pointer" style="height: var(--ep-menu-item-height);">
-				<i inline-flex i="dark:ep-moon ep-sunny" />
+		<el-menu-item
+			h="full"
+			@click="toggleDark()"
+			index="7"
+		>
+			<button
+				class="border-none w-full bg-transparent cursor-pointer"
+				style="height: var(--ep-menu-item-height);"
+			>
+				<i
+					inline-flex
+					i="dark:ep-moon ep-sunny"
+				/>
 			</button>
 		</el-menu-item>
 
@@ -126,15 +143,12 @@ import { toggleDark } from '~/composables';
 			</el-menu-item>
 
 			<el-menu-item index="8-2">
-				退出
-			</el-menu-item>
-		</el-sub-menu>
+			退出
+		</el-menu-item>
+	</el-sub-menu>
 
-	</el-menu>
-</template>
+</el-menu></template>
 
-<style>
-.flex-grow {
+<style>.flex-grow {
 	flex-grow: 1;
-}
-</style>
+}</style>
