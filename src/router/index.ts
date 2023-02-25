@@ -4,6 +4,7 @@ import welcomeVue from "~/components/welcome.vue";
 import add_goodsVue from "~/components/milktea/add_goods.vue";
 import modify_milkteaVue from "~/components/milktea/modify_milktea.vue";
 import sample_modifyVue from "~/components/milktea/sample_modify.vue";
+import series_manageVue from "~/components/milktea/series_manage.vue";
 
 export default createRouter({
 	history: createWebHashHistory(undefined),
@@ -20,6 +21,9 @@ export default createRouter({
 		},{
 			path:"/modify/:guid",
 			component:sample_modifyVue
+		},{
+			path:"/series",
+			component:series_manageVue
 		}
 	]
 })

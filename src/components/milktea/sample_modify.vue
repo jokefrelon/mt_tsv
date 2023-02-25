@@ -188,19 +188,19 @@
 				:icon="Sell"
 			>提交</el-button>
 			<el-button
-				@click="resetForm(formRef)"
+				@click="goBack"
 				size="large"
 				plain
 				type="danger"
-				:icon="Refresh"
-			>清除</el-button>
+				:icon="Back"
+			>返回</el-button>
 		</el-row>
 
 	</div>
 </template>
 
 <script setup lang="ts">
-import { Sell, Refresh, Money, Document, Comment, Flag } from '@element-plus/icons-vue'
+import { Sell, Back, Money, Document, Comment, Flag } from '@element-plus/icons-vue'
 import { reactive, ref, nextTick } from 'vue';
 import { genFileId, ElMessage, ElInput } from 'element-plus'
 import type { FormInstance, FormRules, UploadProps, UploadRawFile, UploadInstance } from 'element-plus'
@@ -376,11 +376,9 @@ const clearpicurl: UploadProps['onRemove'] = e => {
 	form!.picurl = ""
 }
 
-// 重置表格
-const resetForm = (formEl: FormInstance | undefined) => {
-	picUploadRef.value?.clearFiles()
-	if (!formEl) return
-	formEl.resetFields()
+// 返回
+const goBack = () => {
+	router.push({ path: "/modify" })
 }
 
 // 比较数据是否相等

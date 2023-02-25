@@ -176,8 +176,7 @@ onBeforeMount(() => {
 		if (result.errorStatus == false) {
 			seriesData.value = result.dataList
 		}
-	}).catch(error => {
-		console.log(error);
+	}).catch(() => {
 		ElMessage.error("网络错误!")
 	})
 })
@@ -300,8 +299,10 @@ const submitForm = (formEl: FormInstance | undefined) => {
 
 </script>
 
-<style scoped lang="scss">.form {
+<style scoped lang="scss">
+.form {
 	margin: 0 auto;
 	width: 60%;
 	height: 100%;
-}</style>
+}
+</style>

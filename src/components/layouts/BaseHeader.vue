@@ -44,8 +44,6 @@ import { toggleDark } from '~/composables';
 				</el-menu-item>
 			</RouterLink>
 
-			<el-menu-item index="2-5">标签设置</el-menu-item>
-
 		</el-sub-menu>
 
 		<el-menu-item index="3">

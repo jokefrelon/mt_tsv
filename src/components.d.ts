@@ -17,6 +17,7 @@ declare module '@vue/runtime-core' {
     ElHeader: typeof import('element-plus/es')['ElHeader']
     ElIcon: typeof import('element-plus/es')['ElIcon']
     ElImage: typeof import('element-plus/es')['ElImage']
+    ElInput: typeof import('element-plus/es')['ElInput']
     ElInputNumber: typeof import('element-plus/es')['ElInputNumber']
     ElMain: typeof import('element-plus/es')['ElMain']
     ElMenu: typeof import('element-plus/es')['ElMenu']
@@ -36,6 +37,8 @@ declare module '@vue/runtime-core' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Sample_modify: typeof import('./components/milktea/sample_modify.vue')['default']
+    Series_manage: typeof import('./components/milktea/series_manage.vue')['default']
+    Shopping_time: typeof import('./components/milktea/shopping_time.vue')['default']
     Welcome: typeof import('./components/welcome.vue')['default']
   }
 }
