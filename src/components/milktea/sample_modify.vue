@@ -1,58 +1,142 @@
 <template>
 	<div class="form">
-		<el-form :model="form" :rules="formRules" ref="formRef">
-			<el-form-item label="名称:" prop="name">
-				<el-input v-model="form!.name" clearable placeholder="请输入奶茶名称" :prefix-icon="Document" />
+		<el-form
+			:model="form"
+			:rules="formRules"
+			ref="formRef"
+		>
+			<el-form-item
+				label="名称:"
+				prop="name"
+			>
+				<el-input
+					v-model="form!.name"
+					clearable
+					placeholder="请输入奶茶名称"
+					:prefix-icon="Document"
+				/>
 			</el-form-item>
 
-			<el-form-item label="价格:" prop="price">
-				<el-input-number style="width: 100%;" :min="0" v-model="form!.price" clearable placeholder="请输入价格"
-					:prefix-icon="Money" :precision="2" :step="10" />
+			<el-form-item
+				label="价格:"
+				prop="price"
+			>
+				<el-input-number
+					style="width: 100%;"
+					:min="0"
+					v-model="form!.price"
+					clearable
+					placeholder="请输入价格"
+					:prefix-icon="Money"
+					:precision="2"
+					:step="10"
+				/>
 			</el-form-item>
 
-			<el-form-item label="介绍:" prop="intro">
-				<el-input v-model="form!.intro" clearable placeholder="请输入奶茶简介" :prefix-icon="Comment" type="textarea" />
+			<el-form-item
+				label="介绍:"
+				prop="intro"
+			>
+				<el-input
+					v-model="form!.intro"
+					clearable
+					placeholder="请输入奶茶简介"
+					:prefix-icon="Comment"
+					type="textarea"
+				/>
 			</el-form-item>
 
-			<el-form-item label="标签:" prop="tips">
+			<el-form-item
+				label="标签:"
+				prop="tips"
+			>
 
-				<el-tag v-for="tag in form!.tips" :key="tag" closable round hit @close="delTag(tag)">
+				<el-tag
+					v-for="tag in form!.tips"
+					:key="tag"
+					closable
+					round
+					hit
+					@close="delTag(tag)"
+				>
 					{{ tag }}
 				</el-tag>
-				<el-input v-if="tagInputVisible" ref="tagInputRef" v-model="tagValue" class="ml-1 w-20"
-					@keyup.enter="copyTagValue2form_tips" @blur="copyTagValue2form_tips" />
-				<el-button v-else @click="showInput" round>
+				<el-input
+					v-if="tagInputVisible"
+					ref="tagInputRef"
+					v-model="tagValue"
+					class="ml-1 w-20"
+					@keyup.enter="copyTagValue2form_tips"
+					@blur="copyTagValue2form_tips"
+				/>
+				<el-button
+					v-else
+					@click="showInput"
+					round
+				>
 					+新标签
 				</el-button>
 
 				<!-- <el-input v-model="form.tips" clearable placeholder="请输入奶茶标签" :prefix-icon="PriceTag" /> -->
 			</el-form-item>
 
-			<el-form-item label="系列:" prop="series">
-				<el-select style="width: 100%;" v-model="form!.series" clearable placeholder="请选择奶茶所属系列" :suffix-icon="Flag"
-					:fit-input-width=true>
-					<el-option v-for="item in seriesData" :key="item.value" :label="item.label" :value="item.value" />
+			<el-form-item
+				label="系列:"
+				prop="series"
+			>
+				<el-select
+					style="width: 100%;"
+					v-model="form!.series"
+					clearable
+					placeholder="请选择奶茶所属系列"
+					:suffix-icon="Flag"
+					:fit-input-width=true
+				>
+					<el-option
+						v-for="item in seriesData"
+						:key="item.value"
+						:label="item.label"
+						:value="item.value"
+					/>
 				</el-select>
 			</el-form-item>
 
-			<el-form-item label="售罄" prop="soldout">
+			<el-form-item
+				label="售罄"
+				prop="soldout"
+			>
 				<el-radio-group v-model="form!.soldout">
 					<el-radio :label=1>是</el-radio>
 					<el-radio :label=0>否</el-radio>
 				</el-radio-group>
 			</el-form-item>
 
-			<el-form-item label="折扣:" prop="discount">
+			<el-form-item
+				label="折扣:"
+				prop="discount"
+			>
 				<el-row>
 					<el-col :span="11">
-						<el-input-number style="width: 100%;" :max="1" :min="0" v-model="form!.discount" clearable placeholder="请输入折扣"
-							:prefix-icon="Money" :precision="2" :step="0.01" />
+						<el-input-number
+							style="width: 100%;"
+							:max="1"
+							:min="0"
+							v-model="form!.discount"
+							clearable
+							placeholder="请输入折扣"
+							:prefix-icon="Money"
+							:precision="2"
+							:step="0.01"
+						/>
 					</el-col>
 					<el-col :span="2">
 					</el-col>
 					<el-col :span="11">
 						<el-form-item label="现价">
-							<el-input disabled v-model="nowPrice" />
+							<el-input
+								disabled
+								v-model="nowPrice"
+							/>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -60,13 +144,30 @@
 
 			</el-form-item>
 
-			<el-form-item label="图片" prop="picurl">
-				<el-input v-model="form!.picurl" disabled />
+			<el-form-item
+				label="图片"
+				prop="picurl"
+			>
+				<el-input
+					v-model="form!.picurl"
+					disabled
+				/>
 			</el-form-item>
 
-			<el-upload drag ref="picUploadRef" :action="uploadPictureUrl" method="post" list-type="picture" :limit="1"
-				:auto-upload=true :on-exceed="replacePicture" :on-success="copyUrl2picurl" :on-error="notifyUploadPicError"
-				:on-remove="clearpicurl" :file-list=defaultPicture>
+			<el-upload
+				drag
+				ref="picUploadRef"
+				:action="uploadPictureUrl"
+				method="post"
+				list-type="picture"
+				:limit="1"
+				:auto-upload=true
+				:on-exceed="replacePicture"
+				:on-success="copyUrl2picurl"
+				:on-error="notifyUploadPicError"
+				:on-remove="clearpicurl"
+				:file-list=defaultPicture
+			>
 				<el-icon><upload-filled /></el-icon>
 				<p>
 					拖拽图片至此上传
@@ -78,9 +179,21 @@
 			</el-upload>
 		</el-form>
 		<el-row justify="space-evenly">
-			<el-button v-loading="loading" @click="submitForm(formRef)" size="large" plain type="info"
-				:icon="Sell">提交</el-button>
-			<el-button @click="resetForm(formRef)" size="large" plain type="danger" :icon="Refresh">清除</el-button>
+			<el-button
+				v-loading="loading"
+				@click="submitForm(formRef)"
+				size="large"
+				plain
+				type="info"
+				:icon="Sell"
+			>提交</el-button>
+			<el-button
+				@click="resetForm(formRef)"
+				size="large"
+				plain
+				type="danger"
+				:icon="Refresh"
+			>清除</el-button>
 		</el-row>
 
 	</div>
@@ -91,12 +204,12 @@ import { Sell, Refresh, Money, Document, Comment, Flag } from '@element-plus/ico
 import { reactive, ref, nextTick } from 'vue';
 import { genFileId, ElMessage, ElInput } from 'element-plus'
 import type { FormInstance, FormRules, UploadProps, UploadRawFile, UploadInstance } from 'element-plus'
-import { getbaseurl } from "~/axios/baseurl"
-import { getMilkteaByGuid } from "~/axios/milktea/getmilktea"
-import { getallseries } from "~/axios/series/getseries"
 import { useRoute } from 'vue-router'
+
+import { getbaseurl } from "~/axios/baseurl"
+import { getMilkteaByGuid, updateMilkteaByGuid } from "~/axios/milktea"
+import { getallseries } from "~/axios/series"
 import type { formT, dataListT } from "~/type"
-import { updateMilkteaByGuid } from "~/axios/milktea/updatemilktea"
 import router from '~/router';
 
 const route = useRoute()

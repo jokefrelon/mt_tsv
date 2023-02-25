@@ -24,4 +24,9 @@ type dataListT = {
 	discount: number
 } | undefined
 
-export type { formT, dataListT }
+type seriesT = {
+	label:string,
+	value:number,
+} | undefined
+
+export type { formT, dataListT ,seriesT}

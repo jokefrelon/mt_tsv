@@ -13,6 +13,7 @@ import myecharts from "../echarts/index.vue";
 import * as echarts from 'echarts';
 
 
+
 let options_1: any = ref({
 	tooltip: {
 		trigger: 'axis',
@@ -142,26 +143,27 @@ let options_3: any = ref({
 		}
 	},
 	visualMap: {
-		show: false,
+		show: true,
 		min: 0,
-		max: 500
+		max: 500,
+		left: 0,
+		top: 60,
+		inRange: {
+			color: ["#eee", "#6f6", "#090", "#040"]
+		}
 	},
-	gradientColor: [
-		"#cfc",
-		"#6f6",
-		"#0f0",
-		"#090",
-		"#040"
-	],
 	calendar: {
-		left: "80",
-		right: "80",
 		range: '2023',
-		cellSize: [20, 23],//[kuan gao]
+		cellSize: 23,
+		splitLine: {
+			show: false
+		},
+
 		itemStyle: {
-			color: "#ffffff00",
-			borderColor: "#88888888",
-			borderWidth: 0.2
+			borderWidth: 5,
+			borderRadius: 5,
+			color: 'rgba(0,0,0,0)',
+			borderColor: 'rgba(0,0,0,0)',
 		},
 		dayLabel: {
 			nameMap: "ZH",
@@ -188,15 +190,19 @@ let options_3: any = ref({
 	},
 	series: {
 		type: 'heatmap',
+		itemStyle: {
+			borderRadius: 5,
+		},
 		coordinateSystem: 'calendar',
 		data: [
 			['2023-01-01', "100"],
-			['2023-01-02', "500"],
-			['2023-04-12', "450"],
-			['2023-06-01', "400"],
-			['2023-04-02', "350"],
-			['2023-08-13', "300"],
-			['2023-03-21', "250"],
+			['2023-01-02', "0"],
+			['2023-01-04', "500"],
+			['2023-01-12', "450"],
+			['2023-01-21', "400"],
+			['2023-01-22', "350"],
+			['2023-01-13', "300"],
+			['2023-01-31', "250"],
 			['2023-09-02', "200"],
 			['2023-12-13', "150"],
 			['2023-11-21', "50"],
@@ -208,10 +214,6 @@ let options_3: any = ref({
 		]
 	}
 })
-
-// watch(() => isDark.value, (o, n) => {
-
-// }, { deep: true })
 
 </script>
 
