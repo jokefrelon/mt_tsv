@@ -19,10 +19,43 @@
 			</div>
 		</el-carousel-item>
 	</el-carousel>
+
+	<el-row>
+		<el-col
+			:xs="8"
+			:sm="4"
+			:md="4"
+			:lg="3"
+		>
+			<el-menu
+				default-active="0"
+				class="cbl"
+			>
+				<el-menu-item
+					v-for="(item, index) in seriesData"
+					:key="item"
+					:index=index.toString()
+					class="cbl-it"
+				>
+
+					<span style="width: 100%;display: flex;align-items: center;justify-content: center;flex-wrap: wrap;">
+						{{ item.name }}
+					</span>
+				</el-menu-item>
+
+
+			</el-menu>
+		</el-col>
+	</el-row>
 </template>
 
 <script setup lang="ts">
+import { ElMessage } from "element-plus";
+import { getOrderMilkteaList } from "~/axios/milktea"
+import { getshopserieslist } from "~/axios/series"
 
+let milkteaData: any = ref({})
+let seriesData: any = ref({})
 
 type x = {
 	imageUrl: string
@@ -51,81 +84,128 @@ const items: x[] = reactive([
 	}
 ])
 
+const initfunc = () => {
+	getOrderMilkteaList().then(e => {
+		if (!e.errorStatus) {
+			milkteaData.value = e.dataList
+		}
+	}).catch(() => {
+		ElMessage.error("网络错误!")
+	})
+	getshopserieslist().then(e => {
+		if (!e.errorStatus) {
+			seriesData.value = e.dataList
+		}
+	}).catch(() => {
+		ElMessage.error("网络错误!")
+	})
+}
+
+onBeforeMount(() => {
+	initfunc()
+})
+
 </script>
 
 
-<style lang="scss" >
+<style lang="scss" scoped>
 :root {
-	--mel-carousel-height: 70px;
+	.ep-menu-item.is-active span {
+		color: var(--ep-color-danger-dark-2);
+	}
+
+	.ep-menu-item.is-active {
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
+		background-color: var(--ep-fill-color);
+		border-radius: var(--ep-border-radius-round);
+	}
+
 }
 
 .item-container {
+
+	--mel-carousel-height: 70px;
+
 	display: flex;
 	align-items: center;
 	height: var(--mel-carousel-height);
 	background-color: var(--ep-fill-color-dark);
 	user-select: none;
-}
 
-.left-image {
-	width: 30%;
-	display: flex;
-	justify-content: flex-end;
-
-	img {
-		width: auto;
+	.left-image {
 		height: var(--mel-carousel-height);
-		object-fit: contain;
-		position: relative;
-		z-index: 2;
-		transform: scale(1);
-    transition: transform 0.5s ease 0s;
+		width: 30%;
+		display: flex;
+		justify-content: flex-end;
+
+		img {
+			width: auto;
+			height: 70px;
+			object-fit: contain;
+			position: relative;
+			z-index: 2;
+			transform: scale(1);
+			transition: transform 0.5s ease 0s;
+		}
+
+		img:hover {
+			transform: scale(1.5);
+		}
 	}
-	img:hover{
-		transform: scale(1.5);
+
+	.ep-carousel__button {
+		background-color: var(--ep-text-color-regular);
+	}
+
+	.right-text {
+		height: var(--mel-carousel-height);
+		width: 70%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: space-evenly;
+
+		h3 {
+			padding: 0;
+			margin: 0;
+			color: var(--ep-text-color-primary);
+			font-family: var(--ep-font-family);
+			font-weight: bolder;
+
+		}
+
+		p {
+			padding: 0;
+			margin: 0;
+		}
+
+		.desc {
+			color: var(--ep-text-color-secondary);
+			font-size: var(--ep-font-size-extra-small);
+		}
+
+		.rmb {
+			font-size: var(--ep-font-size-base);
+			font-weight: bolder;
+			font-style: italic;
+			color: var(--ep-color-danger-dark-2);
+		}
+
+		.rmb::after {
+			content: " ¥";
+		}
 	}
 }
 
-.ep-carousel__button{
-	background-color: var(--ep-text-color-regular);
-}
+.cbl {
 
-.right-text {
-	height: var(--mel-carousel-height);
-	width: 70%;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: space-evenly;
-
-	h3 {
-		padding: 0;
-		margin: 0;
-		color: var(--ep-text-color-primary);
-		font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-		font-weight: bolder;
-
+	.cbl-it {
+		margin: 3px 2px;
+		border-radius: var(--ep-border-radius-round);
 	}
-
-	p {
-		padding: 0;
-		margin: 0;
-	}
-
-	.desc {
-		color: var(--ep-text-color-secondary);
-		font-size: var(--ep-font-size-extra-small);
-	}
-
-	.rmb {
-		font-size: var(--ep-font-size-base);
-		font-weight: bolder;
-		font-style: italic;
-		color: var(--ep-color-danger-dark-2);
-	}
-
-	.rmb::after {
-		content: " ¥";
+	.cbl-it:hover{
+		border-radius: var(--ep-border-radius-round);
 	}
 
 }

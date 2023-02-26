@@ -15,6 +15,7 @@ function getseriesbyname(e: string) {
 	const ax = axios({
 		url: getbaseurl() + "checkseries",
 		method: "get",
+		timeout: 5000,
 		params: {
 			seriesname: e
 		}
@@ -28,6 +29,7 @@ function addseries(e: string) {
 	const ax = axios({
 		url: getbaseurl() + "addseries",
 		method: "get",
+		timeout: 5000,
 		params: {
 			series: e
 		}
@@ -41,6 +43,7 @@ function delseries(e: string) {
 	const ax = axios({
 		url: getbaseurl() + "delseries",
 		method: "get",
+		timeout: 5000,
 		params: {
 			suid: e
 		}
@@ -50,4 +53,16 @@ function delseries(e: string) {
 	return ax
 }
 
-export { getallseries, getseriesbyname, addseries, delseries }
+function getshopserieslist() {
+	const ax = axios({
+		url: getbaseurl() + "getorderlyseries",
+		method: "get",
+		timeout: 5000
+	}).then(res => {
+		return res.data
+	})
+	return ax
+}
+
+
+export { getallseries, getseriesbyname, addseries, delseries, getshopserieslist }

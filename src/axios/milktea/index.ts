@@ -62,4 +62,14 @@ function updateMilkteaByGuid(mt: formT) {
 	})
 	return ax
 }
-export { axmtpost, deletemilkteabyguid, getMilkteaList, getMilkteaByGuid, updateMilkteaByGuid }
+
+function getOrderMilkteaList() {
+	const ax = axios({
+		url: getbaseurl() + "getdescmilktealist",
+		method: "get"
+	}).then(res => {
+		return res.data
+	})
+	return ax
+}
+export { axmtpost, deletemilkteabyguid, getMilkteaList, getMilkteaByGuid, updateMilkteaByGuid, getOrderMilkteaList }

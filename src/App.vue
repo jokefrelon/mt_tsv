@@ -1,6 +1,6 @@
 <template>
 	<el-config-provider namespace="ep">
-		<div class="common-layout">
+		<div>
 			<el-container>
 				<el-header style="padding: 0;">
 					<BaseHeader />

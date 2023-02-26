@@ -7,7 +7,7 @@ import { toggleDark } from '~/composables';
 	<el-menu
 		class="el-menu-demo"
 		mode="horizontal"
-		:ellipsis="false"
+		style="display: flex;justify-content: center"
 	>
 
 		<RouterLink to="/buy">
@@ -127,9 +127,11 @@ import { toggleDark } from '~/composables';
 			</button>
 		</el-menu-item>
 
-		<div class="flex-grow"></div>
 
-		<el-sub-menu index="8">
+		<el-sub-menu
+			index="8"
+			style="display: flex;width: auto;"
+		>
 
 			<template #title>
 				<el-icon>
@@ -143,12 +145,11 @@ import { toggleDark } from '~/composables';
 			</el-menu-item>
 
 			<el-menu-item index="8-2">
-			退出
-		</el-menu-item>
-	</el-sub-menu>
+				退出
+			</el-menu-item>
+		</el-sub-menu>
 
-</el-menu></template>
+	</el-menu>
+</template>
 
-<style>.flex-grow {
-	flex-grow: 1;
-}</style>
+<style></style>
