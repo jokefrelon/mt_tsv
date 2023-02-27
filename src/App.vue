@@ -1,7 +1,7 @@
 <template>
 	<el-config-provider namespace="ep">
-		<div>
-			<el-container>
+		<div class="se">
+			<el-container style="height: 100%;">
 				<el-header style="padding: 0;">
 					<BaseHeader />
 				</el-header>
@@ -24,5 +24,10 @@ const n_store = nstore()
 #app {
 	text-align: center;
 	color: var(--ep-text-color-primary);
+	height: 100%;
+}
+
+.se{
+	height: 100%;
 }
 </style>

@@ -20,16 +20,18 @@
 		</el-carousel-item>
 	</el-carousel>
 
-	<el-row>
-		<el-col
-			:xs="8"
-			:sm="4"
-			:md="4"
-			:lg="3"
+	<div
+		class="page-main-od"
+		@scroll="scr"
+	>
+
+		<div
+			ref="m1ref"
+			class="m1"
 		>
 			<el-menu
 				default-active="0"
-				class="cbl"
+				class="cbl m1-1"
 			>
 				<el-menu-item
 					v-for="(item, index) in seriesData"
@@ -37,16 +39,79 @@
 					:index=index.toString()
 					class="cbl-it"
 				>
-
 					<span style="width: 100%;display: flex;align-items: center;justify-content: center;flex-wrap: wrap;">
 						{{ item.name }}
 					</span>
 				</el-menu-item>
-
-
 			</el-menu>
-		</el-col>
-	</el-row>
+		</div>
+
+		<div class="m2">
+			<div
+				class="m2-1"
+				v-for="item in milkteaData"
+			>
+
+				<el-card
+					class="m2-card"
+					:body-style="{ padding: '0px', width: '100%' }"
+				>
+
+					<el-row :gutter="10">
+						<div class="card_mask"
+							v-show="item.soldout == 1"
+						>	
+						已售罄
+						</div>
+						<el-col
+							:xs="8"
+							:sm="6"
+							:md="6"
+							:lg="6"
+							:xl="4"
+						>
+							<div class="card_image">
+								<img
+									:src="item.picurl"
+									alt="奶茶图片"
+								>
+							</div>
+						</el-col>
+						<el-col
+							:xs="8"
+							:sm="14"
+							:md="14"
+							:lg="14"
+							:xl="16"
+						>
+							<div class="card_main">
+								<h3>{{ item.name }}</h3>
+								<p>{{ item.intro }}</p>
+								<p>{{ item.price }}</p>
+								<p>{{ item.soldout }}</p>
+							</div>
+						</el-col>
+						<el-col
+							:xs="8"
+							:sm="4"
+							:md="4"
+							:lg="4"
+							:xl="4"
+						>
+							<div class="card_other">
+								{{ item.name }}
+							</div>
+						</el-col>
+					</el-row>
+
+
+
+
+				</el-card>
+			</div>
+
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -56,6 +121,20 @@ import { getshopserieslist } from "~/axios/series"
 
 let milkteaData: any = ref({})
 let seriesData: any = ref({})
+
+const m1ref = ref()
+
+const m1_2_TopOriginal = ref(0)
+const m1_px = ref()
+
+function scr(e: any) {
+	console.log(e.target.scrollTop);
+}
+
+onMounted(() => {
+	m1_2_TopOriginal.value = m1ref.value.getBoundingClientRect().y
+	m1_px.value = (m1_2_TopOriginal.value + 1) + "px"
+})
 
 type x = {
 	imageUrl: string
@@ -110,6 +189,7 @@ onBeforeMount(() => {
 
 <style lang="scss" scoped>
 :root {
+
 	.ep-menu-item.is-active span {
 		color: var(--ep-color-danger-dark-2);
 	}
@@ -198,15 +278,110 @@ onBeforeMount(() => {
 	}
 }
 
-.cbl {
 
-	.cbl-it {
-		margin: 3px 2px;
-		border-radius: var(--ep-border-radius-round);
-	}
-	.cbl-it:hover{
-		border-radius: var(--ep-border-radius-round);
+
+.page-main-od {
+	width: 100%;
+	height: calc(100vh - v-bind(m1_px));
+	overflow: auto;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	scrollbar-width: none;
+	font-size: var(--ep-font-size-base);
+
+	.m1 {
+		width: 30%;
+		max-width: 200px;
+		min-width: 80px;
+		height: 100%;
+		margin: 0;
+		position: sticky;
+		position: -webkit-sticky;
+		top: 0px;
+
+		.m1-1 {
+			width: 100%;
+			height: 100%;
+		}
+
+		.cbl {
+
+			.cbl-it {
+				margin: 3px 2px;
+				border-radius: var(--ep-border-radius-round);
+			}
+
+			.cbl-it:hover {
+				border-radius: var(--ep-border-radius-round);
+			}
+
+		}
 	}
 
+	.m2 {
+		display: flex;
+		width: 100%;
+		align-items: center;
+		justify-content: space-evenly;
+		flex-direction: row;
+		flex-wrap: wrap;
+		margin: 0;
+		display: flex;
+		align-items: center;
+		justify-content: space-evenly;
+
+		.m2-1 {
+			width: 100%;
+			height: fit-content;
+			margin: 5px 5px;
+
+			.m2-card {
+				width: 100%;
+				height: 150px;
+				display: flex;
+				z-index: 10;
+
+
+				.card_mask {
+					position: absolute;
+					top: 0;
+					left: 0;
+					right: 0;
+					width: 100%;
+					height: 150px;
+					backdrop-filter: blur(20px);
+					-webkit-backdrop-filter: blur(20px);
+					background-color: rgba($color: #000000, $alpha: 0.1);
+					z-index: 20;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					color: var(--ep-color-danger);
+					font-weight: bold;
+					font-family: var(--ep-font-family);
+					font-size: var(--ep-font-size-base);
+				}
+
+				.card_image {
+					user-select: none;
+
+					img {
+						object-fit: cover;
+						height: 150px;
+					}
+
+				}
+
+				.card_main {}
+
+				.card_other {}
+			}
+		}
+	}
+}
+
+.page-main-od::-webkit-scrollbar {
+	display: none;
 }
 </style>
