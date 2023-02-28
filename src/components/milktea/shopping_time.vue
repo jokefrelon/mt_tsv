@@ -2,6 +2,7 @@
 	<el-carousel
 		height="70px"
 		:interval="3000"
+		style="border-radius: var(--ep-border-radius-base);"
 	>
 		<el-carousel-item v-for="item in items">
 			<div class="item-container">
@@ -26,8 +27,8 @@
 	>
 
 		<div
-			ref="m1ref"
 			class="m1"
+			ref="m1ref"
 		>
 			<el-menu
 				default-active="0"
@@ -44,6 +45,38 @@
 					</span>
 				</el-menu-item>
 			</el-menu>
+			<div class="settlement">
+				<el-row>
+					<el-col
+						:xs="24"
+						:sm="24"
+						:md="12"
+						:lg="12"
+						:xl="12"
+					>
+						<div class="money">
+							总价:<span>{{ money }}</span>
+						</div>
+					</el-col>
+					<el-col
+						:xs="24"
+						:sm="24"
+						:md="12"
+						:lg="12"
+						:xl="12"
+					>
+						<div class="text">
+							<div class="bt">
+								<i class="bi bi-cash">结算</i>
+							</div>
+
+						</div>
+					</el-col>
+				</el-row>
+
+
+			</div>
+
 		</div>
 
 		<div class="m2">
@@ -58,16 +91,16 @@
 				>
 
 					<el-row :gutter="10">
-						<div class="card_mask"
+						<div
+							class="card_mask"
 							v-show="item.soldout == 1"
-						>	
-						已售罄
+						>
 						</div>
 						<el-col
-							:xs="8"
+							:xs="6"
 							:sm="6"
-							:md="6"
-							:lg="6"
+							:md="4"
+							:lg="4"
 							:xl="4"
 						>
 							<div class="card_image">
@@ -78,28 +111,64 @@
 							</div>
 						</el-col>
 						<el-col
-							:xs="8"
+							:xs="14"
 							:sm="14"
-							:md="14"
-							:lg="14"
+							:md="16"
+							:lg="16"
 							:xl="16"
 						>
 							<div class="card_main">
-								<h3>{{ item.name }}</h3>
-								<p>{{ item.intro }}</p>
-								<p>{{ item.price }}</p>
-								<p>{{ item.soldout }}</p>
+								<h3 class="name">{{ item.name }}</h3>
+								<p class="intro">{{ item.intro }}</p>
+
+								<p
+									class="price"
+									v-if="item.discount != 1"
+								>
+									<del
+										class="sp"
+										style="color: var(--ep-text-color-disabled);"
+									> {{ item.price }} ¥ </del>
+									<span
+										class="sp"
+										style="color: var(--ep-text-color-primary);"
+									> >> </span>
+									<span class="sp nowp">{{ (item.price * item.discount).toFixed(2) }}</span>
+									<span
+										class="sp"
+										style="color: var(--ep-text-color-secondary);font-style: normal;"
+									>{{ item.discount }}折</span>
+								</p>
+								<p
+									class="price"
+									v-else
+								>
+									<span class="sp nowp">{{ (item.price * item.discount).toFixed(2) }}</span>
+								</p>
 							</div>
 						</el-col>
 						<el-col
-							:xs="8"
+							:xs="4"
 							:sm="4"
 							:md="4"
 							:lg="4"
 							:xl="4"
 						>
 							<div class="card_other">
-								{{ item.name }}
+								<div class="add2car">
+
+									<i
+										class="bi bi-cart3"
+										v-show="!item.status"
+										@click="add2car(item)"
+									></i>
+
+									<i
+										class="bi bi-cart-check"
+										v-show="item.status"
+										@click="removeFromCar(item)"
+									></i>
+								</div>
 							</div>
 						</el-col>
 					</el-row>
@@ -109,7 +178,6 @@
 
 				</el-card>
 			</div>
-
 		</div>
 	</div>
 </template>
@@ -121,8 +189,10 @@ import { getshopserieslist } from "~/axios/series"
 
 let milkteaData: any = ref({})
 let seriesData: any = ref({})
+let money = ref(0)
 
 const m1ref = ref()
+const add2carRef = ref()
 
 const m1_2_TopOriginal = ref(0)
 const m1_px = ref()
@@ -183,6 +253,16 @@ const initfunc = () => {
 onBeforeMount(() => {
 	initfunc()
 })
+
+const add2car = (e: any) => {
+	e.status = true
+	ElMessage.info("已加入购物车!")
+}
+
+const removeFromCar = (e: any) => {
+	e.status = null
+	ElMessage.warning("已从购物车中移除!")
+}
 
 </script>
 
@@ -289,11 +369,73 @@ onBeforeMount(() => {
 	flex-wrap: nowrap;
 	scrollbar-width: none;
 	font-size: var(--ep-font-size-base);
+	position: relative;
+
+	.settlement {
+		position: sticky;
+		position: -webkit-sticky;
+		bottom: 5px;
+		height: fit-content;
+		background-color: var(--ep-bg-color-overlay);
+		backdrop-filter: blur(20px);
+		border-radius: var(--ep-border-radius-base);
+		border: 1px solid var(--ep-border-color);
+		margin-right: 5px;
+		padding: 10px 2px 10px 2px;
+
+		.money {
+			width: 100%;
+			height: 30px;
+			line-height: 30px;
+			font-size: var(--ep-font-size-base);
+
+			span {
+				font-weight: bold;
+				color: var(--ep-color-danger-light-3);
+				font-family: var(--ep-font-family);
+
+			}
+		}
+
+		.money::after {
+			content: "¥";
+		}
+
+		.text {
+			width: 100%;
+			height: 30px;
+			line-height: 30px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			.bt {
+				width: 70%;
+				height: fit-content;
+				background-color: var(--ep-color-danger-light-9);
+				border: 1px solid var(--ep-color-danger-light-5);
+				color: var(--ep-color-danger-dark-2);
+				border-radius: var(--ep-border-radius-round);
+
+				.bi-cash {
+					font-size: var(--ep-font-size-base);
+					font-style: normal;
+					font-weight: bold;
+					cursor: pointer;
+				}
+			}
+			.bt:hover{
+				color: var(--ep-color-white);
+				background-color: var(--ep-color-danger);
+				border:1px solid var(--ep-color-danger);
+			}
+		}
+	}
 
 	.m1 {
 		width: 30%;
 		max-width: 200px;
-		min-width: 80px;
+		min-width: 120px;
 		height: 100%;
 		margin: 0;
 		position: sticky;
@@ -348,6 +490,7 @@ onBeforeMount(() => {
 					top: 0;
 					left: 0;
 					right: 0;
+					bottom: 0;
 					width: 100%;
 					height: 150px;
 					backdrop-filter: blur(20px);
@@ -357,10 +500,14 @@ onBeforeMount(() => {
 					display: flex;
 					align-items: center;
 					justify-content: center;
-					color: var(--ep-color-danger);
+					color: var(--ep-text-color-secondary);
 					font-weight: bold;
 					font-family: var(--ep-font-family);
 					font-size: var(--ep-font-size-base);
+				}
+
+				.card_mask::after {
+					content: "已售罄!";
 				}
 
 				.card_image {
@@ -373,9 +520,81 @@ onBeforeMount(() => {
 
 				}
 
-				.card_main {}
+				.card_main {
+					height: 100%;
+					width: 100%;
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					justify-content: space-evenly;
 
-				.card_other {}
+					.name {
+						width: auto;
+						height: auto;
+						font-size: var(--ep-font-size-extra-large);
+						margin: 5px 0 0 0;
+					}
+
+					.intro {
+						color: var(--ep-text-color-secondary);
+						font-size: var(--ep-font-size-extra-small);
+						margin: 5px 0 0 0;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						flex-wrap: wrap;
+					}
+
+					.price {
+						width: 100%;
+						margin: 5px 0 0 0;
+						color: var(--ep-color-danger-dark-2);
+						font-weight: bold;
+						font-style: italic;
+
+						.sp {
+							margin: 0 1px;
+						}
+
+						.nowp::after {
+							content: "¥";
+						}
+					}
+
+
+				}
+
+				.card_other {
+					width: 100%;
+					height: 100%;
+
+					.add2car {
+						width: 100%;
+						height: 100%;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+
+						.bi-cart3 {
+							font-size: 30px;
+							color: var(--ep-color-danger-dark-2)
+						}
+
+						.bi-cart3:hover {
+							cursor: pointer;
+						}
+
+						.bi-cart-check {
+							font-size: 30px;
+							color: var(--ep-color-success-dark-2)
+						}
+
+						.bi-cart-check:hover {
+							cursor: pointer;
+						}
+					}
+
+				}
 			}
 		}
 	}
@@ -383,5 +602,4 @@ onBeforeMount(() => {
 
 .page-main-od::-webkit-scrollbar {
 	display: none;
-}
-</style>
+}</style>
