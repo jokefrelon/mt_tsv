@@ -23,7 +23,8 @@
 
 	<div
 		class="page-main-od"
-		@scroll="scr"
+		@scroll="scrollFunc"
+		ref="odref"
 	>
 
 		<div
@@ -31,7 +32,7 @@
 			ref="m1ref"
 		>
 			<el-menu
-				default-active="0"
+				:default-active="active_menu_index"
 				class="cbl m1-1"
 			>
 				<el-menu-item
@@ -39,6 +40,7 @@
 					:key="item"
 					:index=index.toString()
 					class="cbl-it"
+					@click="scrollItemTo(index)"
 				>
 					<span style="width: 100%;display: flex;align-items: center;justify-content: center;flex-wrap: wrap;">
 						{{ item.name }}
@@ -121,23 +123,33 @@
 								<h3 class="name">{{ item.name }}</h3>
 								<p class="intro">{{ item.intro }}</p>
 
+								<p class="tag">
+									<el-tag
+										class="tag_detail"
+										v-for="it in item.tips"
+										type="warning"
+										size="small"
+									>{{ it }}
+									</el-tag>
+								</p>
+
 								<p
 									class="price"
 									v-if="item.discount != 1"
 								>
 									<del
 										class="sp"
-										style="color: var(--ep-text-color-disabled);"
+										style="color: var(--ep-text-color-secondary);"
 									> {{ item.price }} ¥ </del>
 									<span
 										class="sp"
-										style="color: var(--ep-text-color-primary);"
-									> >> </span>
+										style="color: var(--ep-text-color-secondary);"
+									> -></span>
 									<span class="sp nowp">{{ (item.price * item.discount).toFixed(2) }}</span>
 									<span
 										class="sp"
-										style="color: var(--ep-text-color-secondary);font-style: normal;"
-									>{{ item.discount }}折</span>
+										style="color: var(--ep-text-color-secondary);font-style: normal;font-size: var(--ep-font-size-extra-small);"
+									>({{ item.discount }}折)</span>
 								</p>
 								<p
 									class="price"
@@ -189,17 +201,52 @@ import { getshopserieslist } from "~/axios/series"
 
 let milkteaData: any = ref({})
 let seriesData: any = ref({})
+
+let seriesScrollDistance: any = ref([0])
 let money = ref(0)
 
 const m1ref = ref()
-const add2carRef = ref()
+const odref = ref()
 
 const m1_2_TopOriginal = ref(0)
 const m1_px = ref()
 
-function scr(e: any) {
-	console.log(e.target.scrollTop);
+const active_menu_index = ref("0")
+
+const initfunc = async () => {
+	// 获取milkteaData数据
+	await getOrderMilkteaList().then(e => {
+		if (!e.errorStatus) {
+			milkteaData.value = e.dataList
+		}
+	}).catch(() => {
+		ElMessage.error("网络错误!")
+	})
+	// 获取seriesData数据
+	await getshopserieslist().then(e => {
+		if (!e.errorStatus) {
+			seriesData.value = e.dataList
+		}
+	}).catch(() => {
+		ElMessage.error("网络错误!")
+	})
+
+	// 计算滚动距离
+	function caleDistance() {
+		for (let index = 0; index < seriesData.value.length; index++) {
+			const ele = seriesData.value[index];
+			seriesScrollDistance.value.push((ele.number * 162) + seriesScrollDistance.value[seriesScrollDistance.value.length - 1])
+		}
+	}
+
+	caleDistance()
+
 }
+
+
+onBeforeMount(() => {
+	initfunc()
+})
 
 onMounted(() => {
 	m1_2_TopOriginal.value = m1ref.value.getBoundingClientRect().y
@@ -212,6 +259,7 @@ type x = {
 	description: string
 	price: string
 }
+
 const items: x[] = reactive([
 	{
 		imageUrl: "http://pics.ip.jokeme.top:6280/2023-02-20/p94n-9gtr-no7x-lcr4.png",
@@ -233,35 +281,33 @@ const items: x[] = reactive([
 	}
 ])
 
-const initfunc = () => {
-	getOrderMilkteaList().then(e => {
-		if (!e.errorStatus) {
-			milkteaData.value = e.dataList
-		}
-	}).catch(() => {
-		ElMessage.error("网络错误!")
-	})
-	getshopserieslist().then(e => {
-		if (!e.errorStatus) {
-			seriesData.value = e.dataList
-		}
-	}).catch(() => {
-		ElMessage.error("网络错误!")
-	})
+function scrollItemTo(params: number) {
+	odref.value.scrollTo({ top: seriesScrollDistance.value[params],scrollListener: false })
 }
 
-onBeforeMount(() => {
-	initfunc()
-})
+// 监听滚动距离
+function scrollFunc(e: any) {
+	for (let index = 0; index < seriesScrollDistance.value.length - 1; index++) {
+		const element = seriesScrollDistance.value;
+		if (element[index] < e.target.scrollTop && e.target.scrollTop < element[index + 1]) {
+			setTimeout(() => {
+				active_menu_index.value = index.toString()
+			}, 100);
+		}
+	}
 
+}
+
+// 添加到购物车操作
 const add2car = (e: any) => {
 	e.status = true
 	ElMessage.info("已加入购物车!")
 }
 
+// 从购物车移除操作
 const removeFromCar = (e: any) => {
 	e.status = null
-	ElMessage.warning("已从购物车中移除!")
+	ElMessage.warning("已移除购物车!")
 }
 
 </script>
@@ -424,10 +470,11 @@ const removeFromCar = (e: any) => {
 					cursor: pointer;
 				}
 			}
-			.bt:hover{
+
+			.bt:hover {
 				color: var(--ep-color-white);
 				background-color: var(--ep-color-danger);
-				border:1px solid var(--ep-color-danger);
+				border: 1px solid var(--ep-color-danger);
 			}
 		}
 	}
@@ -561,6 +608,15 @@ const removeFromCar = (e: any) => {
 						}
 					}
 
+					.tag {
+						width: 100%;
+						margin: 5px 0 0 0;
+
+						.tag_detail {
+							margin: 0px 2px;
+						}
+					}
+
 
 				}
 
@@ -602,4 +658,5 @@ const removeFromCar = (e: any) => {
 
 .page-main-od::-webkit-scrollbar {
 	display: none;
-}</style>
+}
+</style>

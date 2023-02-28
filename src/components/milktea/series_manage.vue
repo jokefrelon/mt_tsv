@@ -14,6 +14,7 @@
 					v-model="seriesName.name"
 					style="width: 100%;"
 					clearable
+					@keyup.enter="submitSeriesName(formRef)"
 				/>
 			</el-form-item>
 		</el-form>

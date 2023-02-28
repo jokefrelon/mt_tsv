@@ -64,5 +64,16 @@ function getshopserieslist() {
 	return ax
 }
 
+function getseriescount() {
+	const ax = axios({
+		url:getbaseurl()+"getseriescount",
+		method:"get",
+		timeout:5000
+	}).then( res => {
+		return res.data;
+	})
+	return ax
+}
 
-export { getallseries, getseriesbyname, addseries, delseries, getshopserieslist }
+
+export { getallseries, getseriesbyname, addseries, delseries, getshopserieslist, getseriescount }
