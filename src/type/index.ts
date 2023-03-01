@@ -29,4 +29,14 @@ type seriesT = {
 	value:number,
 } | undefined
 
-export type { formT, dataListT ,seriesT}
+
+type scrollTableT = {
+	imageUrl: string
+	title: string
+	description: string
+	price: string
+} | undefined
+
+type payMethod = "WeChatPay" | "AliPay" | "Cash"
+
+export type { formT, dataListT ,seriesT,scrollTableT, payMethod}
