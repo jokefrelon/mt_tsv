@@ -64,24 +64,19 @@ let options_1: any = ref({
 			data: [220, 182, 191, 234, 208, 183, 207]
 		},
 		{
-			name: '蜜雪冰城',
+			name: '爽口香蕉',
 			type: 'line',
 			data: [150, 232, 201, 154, 190, 189, 110]
 		},
 		{
-			name: '台式咖啡',
+			name: '菠萝吹雪',
 			type: 'line',
 			data: [220, 132, 161, 134, 128, 139, 186]
 		},
 		{
-			name: '麦香卡隆',
+			name: '草莓桃子🍑',
 			type: 'line',
 			data: [120, 132, 201, 134, 154, 220, 187]
-		},
-		{
-			name: '八八九五',
-			type: 'line',
-			data: [90, 72, 101, 134, 154, 140, 187]
 		}
 	]
 })
@@ -123,11 +118,11 @@ let options_2: any = ref({
 				show: false
 			},
 			data: [
-				{ value: 1048, name: 'Search Engine' },
-				{ value: 735, name: 'Direct' },
-				{ value: 580, name: 'Email' },
-				{ value: 484, name: 'Union Ads' },
-				{ value: 300, name: 'Video Ads' }
+				{ value: 1048, name: '杨枝甘露' },
+				{ value: 735, name: '芋泥啵啵' },
+				{ value: 580, name: '爽口香蕉' },
+				{ value: 484, name: '菠萝吹雪' },
+				{ value: 300, name: '草莓桃子🍑' }
 			]
 		}
 	]

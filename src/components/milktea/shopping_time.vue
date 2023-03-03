@@ -1,7 +1,7 @@
 <template>
 	<div class="shopping">
 		<!-- 轮播图 -->
-		<el-carousel
+		<!-- <el-carousel
 			height="70px"
 			:interval="3000"
 			style="border-radius: var(--ep-border-radius-base);"
@@ -21,7 +21,7 @@
 					</div>
 				</div>
 			</el-carousel-item>
-		</el-carousel>
+		</el-carousel> -->
 
 		<div
 			class="page-main-od"
@@ -192,13 +192,13 @@
 										>
 											<el-slider
 												@change="sliderValueChange(item, $event)"
-												v-model="carDate[item.guid]"
+												v-model="carData[item.guid]"
 												:min="0"
 												:max="3"
 												:step="1"
 												show-stops
 											/>
-											<span class="cups">数量:{{ carDate[item.guid] }}</span>
+											<span class="cups">数量:{{ carData[item.guid] }}</span>
 										</div>
 
 									</div>
@@ -216,15 +216,15 @@
 
 		<el-dialog
 			v-model="centerDialogVisible"
-			title="提示"
+			title="请选择支付方式!"
 			center
 			width="75%"
 			class="dialog_box"
-			:before-close="handleClose"
+			:before-close="cancelOrder"
 		>
 			<div class="dialog_main">
 				<span style="width: 100%; display: inline-block; text-align: center;">
-					请选择支付方式!
+					订单号：{{ ouid }}
 				</span>
 				<el-divider />
 				<div class="cheapcode">
@@ -260,7 +260,7 @@
 						<el-button
 							plain
 							class="bt alipay"
-							@click="paySuccess('AliPay')"
+							@click="orderStatus('AliPay')"
 						>
 							<template #icon>
 								<i class="bi bi-alipay"></i>
@@ -273,7 +273,7 @@
 						<el-button
 							plain
 							class="bt wechatpay"
-							@click="paySuccess('WeChatPay')"
+							@click="orderStatus('WeChatPay')"
 						>
 							<template #icon>
 								<i class="bi bi-wechat"></i>
@@ -286,7 +286,7 @@
 						<el-button
 							plain
 							class="bt cash"
-							@click="paySuccess('Cash')"
+							@click="orderStatus('Cash')"
 						>
 							<template #icon>
 								<i class="bi bi-credit-card-fill"></i>
@@ -307,10 +307,8 @@ import { ElMessage } from "element-plus";
 import { getOrderMilkteaList } from "~/axios/milktea"
 import { getshopserieslist } from "~/axios/series"
 import { checkCode } from "~/axios/cheapcode"
+import { postdata2generateOrder, delCanceledOrder, pay } from "~/axios/order"
 import type { scrollTableT, payMethod } from "~/type"
-
-let milkteaData: any = ref({})
-let seriesData: any = ref({})
 
 const cheapCode = ref("")
 
@@ -318,22 +316,25 @@ const centerDialogVisible = ref(false)
 
 let seriesScrollDistance: any = ref([0])
 
+let milkteaData: any = ref({})
+let seriesData: any = ref({})
 // 动态计算总金额
 let money = computed(() => {
-	if (Object.keys(carDate).length == 0) {
+	if (Object.keys(carData).length == 0) {
 		return 0
 	} else {
 		let sum = 0
-		for (let index = 0; index < Object.keys(carDate).length; index++) {
-			const ele = Object.keys(carDate)[index];
-			sum += parseFloat((carDate[ele] * priceTable[ele] * discountTable[ele]).toFixed(2))
+		for (let index = 0; index < Object.keys(carData).length; index++) {
+			const ele = Object.keys(carData)[index];
+			sum += parseFloat((carData[ele] * priceTable[ele] * discountTable[ele]).toFixed(2))
 		}
 		return sum;
 	}
 })
 
 const finalPrice = ref(0)
-const carDate: any = reactive({})
+const ouid = ref("")
+const carData: any = reactive({})
 
 const priceTable: any = reactive({})
 const discountTable: any = reactive({})
@@ -434,22 +435,22 @@ function scrollFunc(e: any) {
 const add2car = (e: any) => {
 	e.status = true
 	ElMessage.info("已加入购物车!")
-	carDate[e.guid] = 1
+	carData[e.guid] = 1
 }
 
 // 当slider的值为0时,就切换显示动画
 const sliderValueChange = (e: any, event: any) => {
 	if (event == 0) {
 		e.status = false
+		delete carData[e.guid]
 	}
-
 }
 
 // 从购物车移除操作
 const removeFromCar = (e: any) => {
 	e.status = null
 	ElMessage.warning("已移除购物车!")
-	delete carDate[e.guid]
+	delete carData[e.guid]
 }
 
 // 显示支付方式dialog
@@ -458,6 +459,7 @@ const showDialog = () => {
 		ElMessage.error("购物车里没有商品!")
 	} else {
 		centerDialogVisible.value = true
+		generateOrder()
 	}
 
 }
@@ -486,17 +488,43 @@ const verifyCheapCode = () => {
 
 }
 
-// 提交订单后直接支付成功后
-const paySuccess = (e: payMethod) => {
+// 创建订单
+const generateOrder = () => {
+	postdata2generateOrder(carData, money.value).then(e => {
+		if (!e.errorStatus) {
+			ouid.value = e.dataList[0]
+		}
+	})
+}
 
-	ElMessage.success("支付成功!")
-	centerDialogVisible.value = false
+// 提交订单后支付成功后提示
+const orderStatus = (e: payMethod) => {
+	pay(e, ouid.value).then(e => {
+		if (e == true) {
+			ElMessage.success("支付成功!")
+			centerDialogVisible.value = false
+			
+			const x = Object.keys(carData)
+			
+			for (let index = 0; index < x.length ; index++) {
+				const element = x[index];
+				delete carData[element]
+				
+			}
+			initfunc()
+		}else{
+			ElMessage.error("支付失败!")
+		}
+	})
+
 
 }
 
-const handleClose = (done: () => void) => {
+// 取消支付时会发送删除订单的请求
+const cancelOrder = (done: () => void) => {
 	finalPrice.value = 0
 	cheapCode.value = ""
+	delCanceledOrder(ouid.value)
 	done()
 }
 </script>

@@ -103,6 +103,8 @@
 				prop="guid"
 				fixed="right"
 				label="管理"
+				class-name="manage"
+				width="140"
 			>
 				<template #default="{ row }">
 					<el-button
@@ -141,7 +143,7 @@ const tableData = ref()
 const previewList = ref()
 const seriesList = ref([])
 
-onBeforeMount( () => {
+onBeforeMount(() => {
 	initFunc()
 }
 
@@ -213,6 +215,24 @@ function editItem(params: string) {
 </script>
 
 <style scoped lang="scss">
+::v-deep .cell {
+	width: 100%;
+	padding: 0;
+	display: flex;
+	align-items: center;
+	justify-content: space-evenly;
+	flex-direction: row;
+
+	button {
+		width: fit-content;
+	}
+
+	.ep-button+.ep-button {
+		margin: 0;
+	}
+}
+
+
 .tips_in_table {
 	justify-content: space-evenly;
 }
