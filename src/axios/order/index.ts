@@ -31,13 +31,28 @@ function delCanceledOrder(ouid: string) {
 	return ax
 }
 
-function pay(paymethod:payMethod,ouid: string) {
+function pay(paymethod: payMethod, ouid: string) {
 	const ax = axios({
 		url: getbaseurl() + "payOrder",
 		method: "get",
 		params: {
-			payMethod:paymethod,
+			payMethod: paymethod,
 			ouid: ouid
+		},
+		timeout: 5000
+	}).then(res => {
+		return res.data
+	})
+	return ax
+}
+
+function getOrderPageList(page: number, size: number) {
+	const ax = axios({
+		url: getbaseurl() + "getOrderPage",
+		method: "get",
+		params: {
+			page: page,
+			size: size
 		},
 		timeout: 5000
 	}).then(res => {
@@ -49,4 +64,4 @@ function pay(paymethod:payMethod,ouid: string) {
 
 
 
-export { postdata2generateOrder, delCanceledOrder ,pay}
+export { postdata2generateOrder, delCanceledOrder, pay, getOrderPageList }

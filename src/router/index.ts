@@ -6,6 +6,7 @@ import modify_milkteaVue from "~/components/milktea/modify_milktea.vue";
 import sample_modifyVue from "~/components/milktea/sample_modify.vue";
 import series_manageVue from "~/components/milktea/series_manage.vue";
 import shopping_timeVue from "~/components/milktea/shopping_time.vue";
+import orderVue from "~/components/order/order.vue";
 
 export default createRouter({
 	history: createWebHashHistory(undefined),
@@ -28,6 +29,9 @@ export default createRouter({
 		},{
 			path:"/buy",
 			component:shopping_timeVue
+		},{
+			path:"/order",
+			component:orderVue
 		}
 	]
 })

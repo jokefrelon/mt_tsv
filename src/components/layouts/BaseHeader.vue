@@ -53,12 +53,15 @@ import { toggleDark } from '~/composables';
 
 		</el-sub-menu>
 
-		<el-menu-item index="3">
-			<el-icon>
-				<Tickets />
-			</el-icon>
-			订单
-		</el-menu-item>
+		<RouterLink to="/order">
+			<el-menu-item index="3">
+				<el-icon>
+					<Tickets />
+				</el-icon>
+				订单
+			</el-menu-item>
+		</RouterLink>
+
 
 		<el-sub-menu index="4">
 			<template #title>

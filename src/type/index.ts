@@ -25,8 +25,8 @@ type dataListT = {
 } | undefined
 
 type seriesT = {
-	label:string,
-	value:number,
+	label: string,
+	value: number,
 } | undefined
 
 
@@ -39,4 +39,18 @@ type scrollTableT = {
 
 type payMethod = "WeChatPay" | "AliPay" | "Cash"
 
-export type { formT, dataListT ,seriesT,scrollTableT, payMethod}
+type orderinfo = {
+	ouid: string,
+	order_detail: string,
+	order_time: string,
+	money: string,
+	isdel: number,
+	refund: number,
+	del_time: string | null,
+	refund_time: string | null,
+	pay_method: payMethod | null,
+	cheapcode: string | null,
+	paid: string
+} | null
+
+export type { formT, dataListT, seriesT, scrollTableT, payMethod, orderinfo }

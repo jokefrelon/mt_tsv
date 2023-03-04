@@ -215,7 +215,7 @@ function editItem(params: string) {
 </script>
 
 <style scoped lang="scss">
-::v-deep .cell {
+:deep(.cell) {
 	width: 100%;
 	padding: 0;
 	display: flex;
