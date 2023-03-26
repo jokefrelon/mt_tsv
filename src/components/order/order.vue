@@ -126,7 +126,6 @@
 		</el-table>
 
 	</div>
-
 	<div class="demo-pagination-block">
 		<el-pagination
 			v-model:current-page="currentPage"
@@ -147,6 +146,8 @@
 
 import { getOrderPageList } from "~/axios/order";
 import { getMilkteaList } from "~/axios/milktea";
+
+
 import { orderinfo } from "~/type";
 
 const pageListData = ref([])
@@ -180,6 +181,8 @@ async function getPageMilkteaData() {
 			pageListData.value = e.dataList
 			total.value = parseInt(e.msg)
 		}
+		console.log("@@@@@@@@@@@@@@@@@@", currentPage.value, pageSize.value);
+
 	})
 }
 
@@ -217,7 +220,7 @@ async function handleCurrentChange(x: number) {
 	getPageMilkteaData()
 }
 
-async function handleSizeChange (x: number) {
+async function handleSizeChange(x: number) {
 	pageSize.value = x
 	getPageMilkteaData()
 }
