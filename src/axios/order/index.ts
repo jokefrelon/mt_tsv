@@ -61,7 +61,34 @@ function getOrderPageList(page: number, size: number) {
 	return ax
 }
 
+function refundbyouid(ouid: string){
+	const ax = axios({
+		url:getbaseurl()+"refund",
+		method:"get",
+		params:{
+			ouid: ouid
+		},
+		timeout:5000
+	}).then(res => {
+		return res.data
+	})
+	return ax
+}
+
+function deleteRecordFromorderinfo(ouid: string){
+	const ax = axios({
+		url:getbaseurl()+"deleteorderinfo",
+		method:"get",
+		params:{
+			ouid: ouid
+		},
+		timeout:5000
+	}).then(res => {
+		return res.data
+	})
+	return ax
+}
 
 
 
-export { postdata2generateOrder, delCanceledOrder, pay, getOrderPageList }
+export { postdata2generateOrder, delCanceledOrder, pay, getOrderPageList, refundbyouid, deleteRecordFromorderinfo}

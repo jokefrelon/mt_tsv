@@ -1,5 +1,5 @@
 <template>
-	<el-config-provider namespace="ep">
+	<el-config-provider namespace="ep" :locale="locale">
 		<div class="se">
 			<el-container style="height: 100%;">
 				<el-header style="padding: 0;">
@@ -14,10 +14,8 @@
 </template>
 
 <script lang="ts" setup>
-import nstore from "./store/index"
-
-const n_store = nstore()
-
+import zhCn from 'element-plus/lib/locale/lang/zh-cn'
+let locale = zhCn
 </script>
 
 <style>

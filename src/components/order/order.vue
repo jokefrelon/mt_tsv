@@ -54,14 +54,11 @@
 				width="110"
 			>
 				<template #default="row">
-					<span
-						style="color: var(--ep-color-success);"
-						v-if="row.row.refund == 0"
-					>
+					<span v-if="row.row.refund == 0">
 						否
 					</span>
 					<span
-						style="color: var(--ep-color-error);"
+						style="color: var(--ep-color-error);font-weight: bold;"
 						v-else
 					>是</span>
 				</template>
@@ -79,18 +76,25 @@
 				width="120"
 			>
 				<template #default="row">
-					<span
-						style="color: var(--ep-color-success);"
-						v-if="row.row.paid == 'Y'"
-					>
-						已支付
-					</span>
-					<span
-						style="color: var(--ep-color-error);font-weight: bold;"
-						v-else
-					>
-						未支付
-					</span>
+					<template v-if="row.row.refund == 0">
+						<span v-if="row.row.paid == 'Y'">
+							已支付
+						</span>
+						<span
+							style="color: var(--ep-color-error);font-weight: bold;"
+							v-else
+						>
+							未支付
+						</span>
+					</template>
+
+					<template v-else>
+						<del style="color: var(--ep-text-color-placeholder)">
+							已退款
+						</del>
+					</template>
+
+
 				</template>
 			</el-table-column>
 			<el-table-column
@@ -130,7 +134,7 @@
 		<el-pagination
 			v-model:current-page="currentPage"
 			v-model:page-size="pageSize"
-			:page-sizes="[3, 5, 10]"
+			:page-sizes="[10, 20, 50]"
 			:small="small"
 			:disabled="disabled"
 			:background="background"
@@ -144,11 +148,10 @@
 
 <script setup lang="ts">
 
-import { getOrderPageList } from "~/axios/order";
+import { getOrderPageList ,refundbyouid, deleteRecordFromorderinfo} from "~/axios/order";
 import { getMilkteaList } from "~/axios/milktea";
 
-
-import { orderinfo } from "~/type";
+import { ElMessage } from "element-plus";
 
 const pageListData = ref([])
 const milkteaData: any = ref({})
@@ -160,7 +163,7 @@ const search = ref()
 const total = ref(0)
 
 const currentPage = ref(1)
-const pageSize = ref(3)
+const pageSize = ref(10)
 
 const small = ref(false)
 const background = ref(false)
@@ -181,8 +184,6 @@ async function getPageMilkteaData() {
 			pageListData.value = e.dataList
 			total.value = parseInt(e.msg)
 		}
-		console.log("@@@@@@@@@@@@@@@@@@", currentPage.value, pageSize.value);
-
 	})
 }
 
@@ -208,18 +209,34 @@ const moneyDIYsort = (a: any, b: any) => {
 }
 
 const handleRefund = (order: any) => {
-	console.log(order);
+	refundbyouid(order.ouid).then(e=>{
+		if (!e.errorStatus) {
+			ElMessage.success("退款成功！")
+			order.refund=1
+		}else{
+			ElMessage.error("网络错误！")
+		}
+	})
 }
 
-const handleDelete = (ordedr: any) => {
-
+const handleDelete = (order: any) => {
+	deleteRecordFromorderinfo(order.ouid).then(e=>{
+		if (!e.errorStatus) {
+			ElMessage.success("删除成功！")
+			getPageMilkteaData()
+		}else{
+			ElMessage.error("删除失败！")
+		}
+	})
 }
 
+//负责分页
 async function handleCurrentChange(x: number) {
 	currentPage.value = x
 	getPageMilkteaData()
 }
 
+//负责每页数量
 async function handleSizeChange(x: number) {
 	pageSize.value = x
 	getPageMilkteaData()
