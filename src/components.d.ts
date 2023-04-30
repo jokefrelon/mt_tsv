@@ -5,9 +5,12 @@ import '@vue/runtime-core'
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    Account_manage: typeof import('./components/other/account_manage.vue')['default']
     Add_goods: typeof import('./components/milktea/add_goods.vue')['default']
     BaseHeader: typeof import('./components/layouts/BaseHeader.vue')['default']
-    BaseSide: typeof import('./components/layouts/BaseSide.vue')['default']
+    Cheapcode: typeof import('./components/other/cheapcode.vue')['default']
+    Clock_in: typeof import('./components/staff/Clock_in.vue')['default']
+    Daily: typeof import('./components/purchase/daily.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCard: typeof import('element-plus/es')['ElCard']
     ElCol: typeof import('element-plus/es')['ElCol']
@@ -37,15 +40,19 @@ declare module '@vue/runtime-core' {
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElTag: typeof import('element-plus/es')['ElTag']
     ElUpload: typeof import('element-plus/es')['ElUpload']
+    Fruit: typeof import('./components/purchase/fruit.vue')['default']
     Loading: typeof import('element-plus/es')['ElLoadingDirective']
     Modify_milktea: typeof import('./components/milktea/modify_milktea.vue')['default']
     Order: typeof import('./components/order/order.vue')['default']
+    Other: typeof import('./components/purchase/other.vue')['default']
+    Request_for_leave: typeof import('./components/staff/request_for_leave.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Sample_modify: typeof import('./components/milktea/sample_modify.vue')['default']
     Series_manage: typeof import('./components/milktea/series_manage.vue')['default']
     Shopping_time: typeof import('./components/milktea/shopping_time.vue')['default']
     Welcome: typeof import('./components/welcome.vue')['default']
+    Welfare: typeof import('./components/staff/welfare.vue')['default']
   }
 }
 

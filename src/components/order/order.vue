@@ -134,7 +134,7 @@
 		<el-pagination
 			v-model:current-page="currentPage"
 			v-model:page-size="pageSize"
-			:page-sizes="[10, 20, 50]"
+			:page-sizes="[20, 50, 100]"
 			:small="small"
 			:disabled="disabled"
 			:background="background"
@@ -163,7 +163,7 @@ const search = ref()
 const total = ref(0)
 
 const currentPage = ref(1)
-const pageSize = ref(10)
+const pageSize = ref(20)
 
 const small = ref(false)
 const background = ref(false)

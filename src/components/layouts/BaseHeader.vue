@@ -71,11 +71,18 @@ import { toggleDark } from '~/composables';
 				采购
 			</template>
 
-			<el-menu-item index="4-1">水果/食品</el-menu-item>
+			<RouterLink to="/buyfruit">
+				<el-menu-item index="4-1">水果/食品</el-menu-item>
+			</RouterLink>
 
-			<el-menu-item index="4-2">消耗品</el-menu-item>
+			<RouterLink to="/buydaily">
+				<el-menu-item index="4-2">消耗品</el-menu-item>
+			</RouterLink>
 
-			<el-menu-item index="4-3">其他</el-menu-item>
+			<RouterLink to="/buyother">
+				<el-menu-item index="4-3">其他</el-menu-item>
+			</RouterLink>
+
 		</el-sub-menu>
 
 		<el-sub-menu index="5">
@@ -86,16 +93,18 @@ import { toggleDark } from '~/composables';
 				</el-icon>
 				员工
 			</template>
+			<RouterLink to="/leave">
+				<el-menu-item index="5-1">请假</el-menu-item>
+			</RouterLink>
 
-			<el-menu-item index="5-1">请假/调休</el-menu-item>
+			<RouterLink to="/clockin">
+				<el-menu-item index="5-2">打卡</el-menu-item>
+			</RouterLink>
 
-			<el-menu-item index="5-2">打卡/补卡</el-menu-item>
+			<RouterLink to="/welfare">
+				<el-menu-item index="5-4">福利</el-menu-item>
+			</RouterLink>
 
-			<el-menu-item index="5-3">薪资明细</el-menu-item>
-
-			<el-menu-item index="5-4">专属福利</el-menu-item>
-
-			<el-menu-item index="5-5">账号管理</el-menu-item>
 
 		</el-sub-menu>
 
@@ -108,9 +117,10 @@ import { toggleDark } from '~/composables';
 				其他
 			</template>
 
-			<el-menu-item index="6-1">优惠码</el-menu-item>
+			<RouterLink to="/cheapcode">
+				<el-menu-item index="6-1">优惠码</el-menu-item>
+			</RouterLink>
 
-			<el-menu-item index="6-2">排班表</el-menu-item>
 
 		</el-sub-menu>
 
@@ -142,10 +152,9 @@ import { toggleDark } from '~/composables';
 				</el-icon>
 				{ { User } }
 			</template>
-
-			<el-menu-item index="8-1">
-				个人资料
-			</el-menu-item>
+			<RouterLink to="/user_manage">
+				<el-menu-item index="8-1">账号管理</el-menu-item>
+			</RouterLink>
 
 			<el-menu-item index="8-2">
 				退出
@@ -155,4 +164,9 @@ import { toggleDark } from '~/composables';
 	</el-menu>
 </template>
 
-<style></style>
+<style scoped>
+.ep-menu-item {
+	align-items: center;
+	justify-content: space-evenly;
+}
+</style>

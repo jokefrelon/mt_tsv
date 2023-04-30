@@ -1,28 +1,5 @@
 <template>
 	<div class="shopping">
-		<!-- 轮播图 -->
-		<!-- <el-carousel
-			height="70px"
-			:interval="3000"
-			style="border-radius: var(--ep-border-radius-base);"
-		>
-			<el-carousel-item v-for="item in CarouselData">
-				<div class="item-container">
-					<div class="left-image">
-						<img
-							:src="item!.imageUrl"
-							alt=""
-						>
-					</div>
-					<div class="right-text">
-						<h3>{{ item!.title }}</h3>
-						<p class="desc">{{ item!.description }}</p>
-						<p class="rmb">{{ item!.price }}</p>
-					</div>
-				</div>
-			</el-carousel-item>
-		</el-carousel> -->
-
 		<div
 			class="page-main-od"
 			@scroll="scrollFunc"
@@ -305,7 +282,7 @@
 <script setup lang="ts">
 import { ElMessage } from "element-plus";
 import { getOrderMilkteaList } from "~/axios/milktea"
-import { getshopserieslist } from "~/axios/series"
+import { getseriescount} from "~/axios/series"
 import { checkCode } from "~/axios/cheapcode"
 import { postdata2generateOrder, delCanceledOrder, pay } from "~/axios/order"
 import type { scrollTableT, payMethod } from "~/type"
@@ -353,16 +330,20 @@ const initfunc = async () => {
 	await getOrderMilkteaList().then(e => {
 		if (!e.errorStatus) {
 			milkteaData.value = e.dataList
+		}else{
+			ElMessage.warning(e.msg)
 		}
 	}).catch(() => {
 		ElMessage.error("网络错误!")
 	})
 	// 获取seriesData数据
-	await getshopserieslist().then(e => {
+	await getseriescount().then(e => {
 		if (!e.errorStatus) {
 			seriesData.value = e.dataList
+		}else{
+			ElMessage.warning(e.msg)
 		}
-	}).catch(() => {
+	}).catch( () => {
 		ElMessage.error("网络错误!")
 	})
 
@@ -386,8 +367,8 @@ const initfunc = async () => {
 	generatePriceAndDiscountTable()
 }
 
-onBeforeMount(() => {
-	initfunc()
+onBeforeMount(async () => {
+	await initfunc()
 })
 
 onMounted(() => {
@@ -396,26 +377,10 @@ onMounted(() => {
 	m1_px.value = (m1_2_TopOriginal.value + 1) + "px"
 })
 
-const CarouselData: scrollTableT[] = reactive([{
-	imageUrl: "http://pics.ip.jokeme.top:6280/2023-03-01/9mzy-thqm-9ida-m00j.png",
-	title: "test",
-	description: "test",
-	price: "test",
-}, {
-	imageUrl: "http://pics.ip.jokeme.top:6280/2023-03-01/9mzy-thqm-9ida-m00j.png",
-	title: "test",
-	description: "test",
-	price: "test",
-}, {
-	imageUrl: "http://pics.ip.jokeme.top:6280/2023-03-01/9mzy-thqm-9ida-m00j.png",
-	title: "test",
-	description: "test",
-	price: "test",
-}])
 
 // 滚动到指定的地方
 function scrollItemTo(params: number) {
-	odref.value.scrollTo({ top: seriesScrollDistance.value[params] })
+	odref.value.scrollTo({ top: seriesScrollDistance.value[params], behavior: 'smooth'})
 }
 
 // 监听滚动距离
